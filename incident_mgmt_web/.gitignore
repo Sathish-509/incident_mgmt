@@ -1,0 +1,31 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+_misc
+
+# Eclipse
+.classpath
+.project
+.settings/
+**/.settings
+**/.classpath
+**/.project
+
+# Mac
+.DS_Store
+
+# Node & ReactJS
+**/build/
+**/node_modules/
+**/*.log
+**/.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+!.yarn.lock

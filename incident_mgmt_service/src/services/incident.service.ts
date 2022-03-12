@@ -1,6 +1,5 @@
 import { HttpException } from '@exceptions/HttpException';
 import { CreatedIncident } from '@interfaces/incident.interface';
-import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
 import { IncidentDto } from '@/dtos/createincident.dto';
 import { CouchDb } from '@teammaestro/node-couchdb-client';
@@ -9,15 +8,12 @@ import { CouchDbConfig, incidentDbName } from '@/config/couchDbconfig';
 const couchDb = new CouchDb(CouchDbConfig)
 
 class IncidentService {
-  public users = userModel;
 
   public async findAllIncidents(): Promise<any> {
     const incidentrecord = await couchDb.findDocuments({
         dbName: incidentDbName,
         findOptions: {
             selector: {
-                incidentType: 'incident1',
-                createdBy: '232'
             }
         }
     });

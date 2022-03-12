@@ -56,7 +56,7 @@ export default function Header() {
           paddingLeft: '10px',
           height: '20px',
           marginTop: '20px'}} />
-        <Box className={classes.sublogo}>{'Software Quality Report'}</Box>
+        <Box className={classes.sublogo}>{'Incident Management'}</Box>
       </Toolbar>
     </Box>
   );

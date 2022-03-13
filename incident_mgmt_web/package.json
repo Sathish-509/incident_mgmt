@@ -44,7 +44,7 @@
     "web-vitals": "1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3001 && react-scripts start",
     "build": "CI=false react-scripts build",
     "build-local": "react-scripts build",
     "test": "react-scripts test",
@@ -52,7 +52,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test-ci": "cross-env CI=true react-scripts test --coverage --watchAll=false --testResultsProcessor jest-sonar-reporter"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:3000",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -72,6 +72,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.179",
     "cross-env": "^7.0.2",
     "husky": "4.3.8",
     "jest-sonar-reporter": "2.0.0",

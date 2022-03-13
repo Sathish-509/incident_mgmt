@@ -10,10 +10,10 @@ import { UpdateIncidentDto } from '@/dtos/updateincident.dto';
 export class IncidentController {
   public incidentService = new IncidentService();
 
-  @Get('/incidents')
+  @Post('/getincidents')
   @OpenAPI({ summary: 'Return a list of Incidents' })
-  async getIncidents() {
-    const findAllUsersData: any[] = await this.incidentService.findAllIncidents();
+  async getIncidents(@Body() incidentData: any) {
+    const findAllUsersData: any[] = await this.incidentService.findAllIncidents(incidentData);
     return { data: findAllUsersData, message: 'findAll' };
   }
 

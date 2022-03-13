@@ -1,7 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Toolbar from '@mui/material/Toolbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,11 +50,6 @@ export default function Header() {
   return (
     <Box sx={{ flexGrow: 1, height: 65, paddingX: 2}} className={classes.header}>
       <Toolbar>
-        <Box className={classes.logo}></Box>
-        <Divider orientation="vertical" flexItem sx={{ borderRightWidth: 1, borderColor: 'white', 
-          paddingLeft: '10px',
-          height: '20px',
-          marginTop: '20px'}} />
         <Box className={classes.sublogo}>{'Incident Management'}</Box>
       </Toolbar>
     </Box>

@@ -9,12 +9,11 @@ const couchDb = new CouchDb(CouchDbConfig)
 
 class IncidentService {
 
-  public async findAllIncidents(): Promise<any> {
+  public async findAllIncidents(incidentData: any): Promise<any> {
     const incidentrecord = await couchDb.findDocuments({
         dbName: incidentDbName,
         findOptions: {
-            selector: {
-            }
+            selector: incidentData
         }
     });
     return incidentrecord;

@@ -7,11 +7,6 @@ export interface IncidentSearchCriteria {
     sort?: any,
 }
 
-export interface Order {
-    orderByColumn: string;
-    orderBy: 'asc' | 'desc';
-}
-
 export interface Page {
     pageSize: number;
     pageNumber: number;

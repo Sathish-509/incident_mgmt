@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IncidentSearchCriteria } from '../../app/types/incident';
+import { Incidents, IncidentSearchCriteria } from '../../app/types/incident';
 import { EnumLiteralsOf } from 'common/types';
 
 export type ResponseResult = EnumLiteralsOf<typeof ResponseResults>;
@@ -17,6 +17,7 @@ export type IncidentSearchResponse = {
 
 export type IncidentSearchState = {
   incidentearchCriteria?: IncidentSearchCriteria;
+  incidentRecord?: Incidents;
   isFetching: boolean;
   error?: string;
 };
@@ -35,6 +36,13 @@ export const IncidentSearch = createSlice({
     processIncidentsSearch: (state, action: PayloadAction<IncidentSearchCriteria>) => {
       state.isFetching = false;
       state.incidentearchCriteria = action.payload;
+    },
+    addIncidentRecordStart: (state, action: PayloadAction<Incidents>) => {
+      state.isFetching = true;
+    },
+    storeUpdateAddRecord: (state, action: PayloadAction<Incidents>) => {
+      state.isFetching = false;
+      state.incidentearchCriteria = action.payload;
     }
   },
 });
@@ -42,6 +50,8 @@ export const IncidentSearch = createSlice({
 export const {
     initiateIncidentSearch,
     processIncidentsSearch,
+    addIncidentRecordStart,
+    storeUpdateAddRecord
 } = IncidentSearch.actions;
 
 export const incidentSearchReducer = IncidentSearch.reducer;

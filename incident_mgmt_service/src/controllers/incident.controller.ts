@@ -19,7 +19,7 @@ export class IncidentController {
 
   @Post('/incidents')
   @HttpCode(201)
-  @UseBefore(validationMiddleware(IncidentDto, 'body'))
+  // @UseBefore(validationMiddleware(IncidentDto, 'body'))
   @OpenAPI({ summary: 'Create a new incident' })
   async createIncident(@Body() incidentData: IncidentDto) {
     const createIncidentData: CreatedIncident = await this.incidentService.createIncident(incidentData);

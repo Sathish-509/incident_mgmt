@@ -22,4 +22,10 @@ export class IncidentDto {
 
   @IsString()
   public assignedTo: string;
+
+  @IsString()
+  public createdDate: string;
+
+  @IsString()
+  public modifiedDate: string;
 }

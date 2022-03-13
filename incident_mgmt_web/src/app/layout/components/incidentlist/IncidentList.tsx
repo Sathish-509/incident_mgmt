@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
+import * as _ from 'lodash';
 import { visuallyHidden } from '@mui/utils';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -16,9 +17,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchIncidentsStart } from '../../../../features/incident/incidentSlice';
 import { incidentsListSelector } from 'features/incident/incidentSelector';
 import { Incidents } from './../../../types/incident';
-import Typography from '@mui/material/Typography';
 import { incidentsSearchCriteriaSelector } from 'features/incidentsearch/incidentsearchSelector';
 import { initiateIncidentSearch } from 'features/incidentsearch/incidentsearchSlice';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import EditIcon from '@mui/icons-material/Edit';
+import Button from '@mui/material/Button';
+import {
+  handleNotOkResponse,
+  getNetworkErrorOrOriginalError,
+} from 'common/utils/requestUtils';
+import { usersListSelector } from 'features/users/userSelector'
+import { incidentStatusListSelector } from 'features/incidentstatus/incidentStatusSelector'
+import { incidentTypesListSelector } from 'features/incidenttype/incidentTypeSelector'
 
 const useStyles = makeStyles((theme: Theme) => ({
   pdfIcon: {
@@ -127,6 +137,11 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Incidenty Type',
   },
+  {
+    numeric: false,
+    disablePadding: false,
+    label: 'Operations',
+  },
 ];
 
 interface EnhancedTableProps {
@@ -182,6 +197,9 @@ export default function EnhancedTable() {
   const dispatch = useDispatch();
   const incidents = useSelector(incidentsListSelector) || [];
   const incidentSearchCriteria = useSelector(incidentsSearchCriteriaSelector)
+  const incidentStatusList = useSelector(incidentStatusListSelector);
+  const usersList = useSelector(usersListSelector);
+  const incidentTypeList = useSelector(incidentTypesListSelector);
 
   useEffect(() => {
     dispatch(fetchIncidentsStart());
@@ -237,6 +255,42 @@ export default function EnhancedTable() {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
   };
 
+  const updateStatus = async (event: any, row:any, statusNameTo: string) => {
+    const statusName: string = statusNameTo === 'New' || statusNameTo=== 'Assigned' ? 'Acknowledged' : 'Completed';
+    const filterList = incidentStatusList?.filter(incidentStatus => incidentStatus.status === statusName);
+    const status = _.get(filterList, ['0', '_id'], '');
+    const incidentsSearchSelectorUpdated = Object.assign({}, row, {status: status});
+    try {
+      const res = await fetch(`/incidents`, {
+        method: 'POST',
+        body: JSON.stringify(incidentsSearchSelectorUpdated)
+      });
+      
+      handleNotOkResponse(res);
+      const json = (await res.json());
+      dispatch(fetchIncidentsStart());
+      return json.data.docs;
+    } catch (error) {
+      console.log("error", error);
+      throw getNetworkErrorOrOriginalError(error);
+    }
+  }
+
+  const deleteIncident = async (event: any, row:any) => {
+    try {
+      const res = await fetch(`/incidents/${row._id}/${row._rev}`, {
+        method: 'DELETE',
+      });
+      handleNotOkResponse(res);
+      const json = (await res.json());
+      dispatch(fetchIncidentsStart());
+      return json.data.docs;
+    } catch (error) {
+      console.log("error", error);
+      throw getNetworkErrorOrOriginalError(error);
+    }
+  }
+
   const isSelected = (no: number) => selected.indexOf(no) !== -1;
   return (
     <Box sx={{ width: '100%' }}>
@@ -261,7 +315,14 @@ export default function EnhancedTable() {
               {stableSort(incidents, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-
+                  const createdByFilterList = usersList?.filter(user => user._id === row.createdBy);
+                  const createdName = _.get(createdByFilterList, ['0', 'name'], '');
+                  const assignedToFilterList = usersList?.filter(user => user._id === row.assignedTo);
+                  const assignedToName = _.get(assignedToFilterList, ['0', 'name'], '');
+                  const statusFilterList = incidentStatusList?.filter(incidentStatus => incidentStatus._id === row.status);
+                  const statusName = _.get(statusFilterList, ['0', 'status'], '');
+                  const incidentTypeFilterList = incidentTypeList?.filter(incidentType => incidentType._id === row.incidentType);
+                  const incidentName = _.get(incidentTypeFilterList, ['0', 'name'], '');
                   return (
                     <TableRow
                       hover
@@ -273,16 +334,17 @@ export default function EnhancedTable() {
                       <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.title}</TableCell>
                       <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.description}</TableCell>
                       <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.createdDate}</TableCell>
-                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.createdBy}</TableCell>
-                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.assignedTo}</TableCell>
-                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.status}</TableCell>
-                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{row.incidentType}</TableCell>
+                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{createdName}</TableCell>
+                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{assignedToName}</TableCell>
+                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{statusName}</TableCell>
+                      <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>{incidentName}</TableCell>
                       <TableCell align="left" sx={{fontSize: '0.75rem', fontWeight: 400, color: '#666666'}}>
                          <Box sx={{display: 'flex', flexDirection:'row'}}>
-                        {/* <Icon classes={{ root: classes.iconRoot }}>
-                          <img className={classes.imageIcon} src={PdfFile} alt={'pdf'}/>
-                        </Icon> */}
-                        <Typography>Pdf</Typography>
+                        {statusName !== 'Completed' && <Button  onClick={(evt: any) => updateStatus(evt, row, statusName)}>{
+                         statusName === 'New' || statusName === 'Assigned' ? 'Acknowledge' : 'Complete'
+                         }</Button>}
+                           <EditIcon/>
+                          <DeleteRoundedIcon onClick={(evt: any) => deleteIncident(evt, row)}/>
                       </Box>
                       </TableCell>
                     </TableRow>

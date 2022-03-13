@@ -8,3 +8,8 @@ export const incidentsSearchCriteriaSelector = createSelector(
   incidentsSearchSelector,
   (incidentssearch) => incidentssearch.incidentearchCriteria
 );
+
+export const incidentsRecordSelector = createSelector(
+  incidentsSearchSelector,
+  (incidentssearch) => incidentssearch.incidentRecord
+);

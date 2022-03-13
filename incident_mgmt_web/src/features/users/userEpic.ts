@@ -4,7 +4,6 @@ import { from } from 'rxjs';
 import { catchError, filter, mergeMap, withLatestFrom } from 'rxjs/operators';
 
 import { RootState } from 'app/redux/rootReducer';
-// import { statementSearchCriteriaSelector } from '.././statementssearch/statementssearchSelector';
 import {
     fetchUserStart,
     fetchUserSuccess,

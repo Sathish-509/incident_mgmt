@@ -40,13 +40,27 @@ export const incidents = createSlice({
       state.isFetching = false;
       state.error = action.payload.error;
     },
+    addIncidentStart: (state, action: Action) => {
+      state.isFetching = true;
+    },
+    addIncidentSuccess: (state, action: PayloadAction<Incidents[]>) => {
+      state.isFetching = false;
+      state.incidentsResult = action.payload;
+    },
+    addIncidentFailure: (state, action: PayloadAction<ErrorPayload>) => {
+      state.isFetching = false;
+      state.error = action.payload.error;
+    },
   },
 });
 
 export const {
     fetchIncidentsStart,
     fetchIncidentsSuccess,
-    fetchIncidentsFailure
+    fetchIncidentsFailure,
+    addIncidentStart,
+    addIncidentSuccess,
+    addIncidentFailure
 } = incidents.actions;
 
 export const incidentsReducer = incidents.reducer;

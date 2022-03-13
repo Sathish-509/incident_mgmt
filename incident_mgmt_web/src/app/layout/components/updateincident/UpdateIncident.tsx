@@ -20,6 +20,7 @@ import {
 } from 'common/utils/requestUtils';
 import { fetchIncidentsStart } from '../../../../features/incident/incidentSlice';
 import { User } from 'app/types/user';
+import { updateFilterSelectorCriteria } from 'features/filter/filtersearchSelector';
 const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     width: 250,
@@ -73,18 +74,21 @@ const style = {
   p: 4,
 };
 
-export default function AddIncident() {
+export default function updateIncident() {
   const classes = useStyles();
   const dispatch = useDispatch();
+
   const [assignedTo, setAssignedTo] = React.useState<string>('');
   const [incidentType, setIncidentType] = React.useState<string>('');
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
 
+  const updateFilter = useSelector(updateFilterSelectorCriteria);
+
   const usersList = useSelector(usersListSelector);
   const incidentTypeList = useSelector(incidentTypesListSelector);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(updateFilter?.open || false);
   const createIncident = async () => {
     const filterNameList:User[] = usersList?.filter((user) => user.name.includes(assignedTo)) || [];
     const userId = _.get(filterNameList, ['0', '_id'], '');

@@ -3,6 +3,10 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, TextField, Typography, Container, Button } from '@mui/material';
+import {
+  handleNotOkResponse,
+  getNetworkErrorOrOriginalError,
+} from 'common/utils/requestUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -28,6 +32,25 @@ const theme = createTheme({
   },
 });
 export default function Login() {
+  const [userName, setUserName] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const validateLogin = async () => {
+    try {
+      const res = await fetch(`/login`, {
+        method: 'POST',
+        body: JSON.stringify({userName, password})
+      });
+      handleNotOkResponse(res);
+      const json = (await res.json());
+      window.location.href = "/dashboard"
+      return json.data.docs;
+    } catch (error) {
+      console.log("error", error);
+      throw getNetworkErrorOrOriginalError(error);
+    }
+  }
+
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="xs">
@@ -43,9 +66,9 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              name="email"
-              autoComplete="email"
+              id="name"
+              name="name"
+              onChange={(evt) => setUserName(evt.target.value)}
               autoFocus
             />
             <Typography variant="subtitle1">Password</Typography>
@@ -56,9 +79,10 @@ export default function Login() {
               name="password"
               type="password"
               id="password"
+              onChange={(evt) => setPassword(evt.target.value)}
               autoComplete="current-password"
             />
-            <Button type="submit" variant="contained" color="primary" className={classes.submit}>
+            <Button variant="contained" color="primary" className={classes.submit} onClick={validateLogin}>
               <Typography variant="subtitle1">Submit</Typography>
             </Button>
           </ThemeProvider>

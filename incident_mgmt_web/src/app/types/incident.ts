@@ -36,3 +36,8 @@ export interface IncidentStatus {
     _rev: string;
     status: string;
 }
+
+export interface UpdateFilter {
+    open: boolean;
+    record: any;
+}

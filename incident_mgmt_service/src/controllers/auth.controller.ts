@@ -11,16 +11,8 @@ import AuthService from '@services/auth.service';
 export class AuthController {
   public authService = new AuthService();
 
-  @Post('/signup')
-  @UseBefore(validationMiddleware(CreateUserDto, 'body'))
-  @HttpCode(201)
-  async signUp(@Body() userData: CreateUserDto) {
-    const signUpUserData: User = await this.authService.signup(userData);
-    return { data: signUpUserData, message: 'signup' };
-  }
-
   @Post('/login')
-  @UseBefore(validationMiddleware(CreateUserDto, 'body'))
+  // @UseBefore(validationMiddleware(CreateUserDto, 'body'))
   async logIn(@Res() res: Response, @Body() userData: CreateUserDto) {
     const { cookie, findUser } = await this.authService.login(userData);
 

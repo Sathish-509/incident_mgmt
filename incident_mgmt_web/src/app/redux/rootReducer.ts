@@ -4,6 +4,7 @@ import { incidentSearchInitialState, incidentSearchReducer } from 'features/inci
 import { incidentStatusInitialState, incidentStatusReducer } from 'features/incidentstatus/incidentStatusSlice';
 import { incidentTypesInitialState, incidentTypesReducer } from 'features/incidenttype/incidentTypeSlice';
 import { userInitialState, usersReducer } from 'features/users/usersSlice';
+import { updateFilterInitialState, updateFilterReducer } from 'features/filter/filtersearchSlice';
 
 export type RootState = ReturnType<typeof appReducer>;
 
@@ -13,6 +14,7 @@ export const appReducer = combineReducers({
   incidentStatus: incidentStatusReducer,
   incidentsType: incidentTypesReducer,
   users: usersReducer,
+  updateFilter: updateFilterReducer
 });
 
 export const resetApp = createAction('root/resetApp');
@@ -32,4 +34,6 @@ export const rootInitialState = {
   incidentStatus: incidentStatusInitialState,
   incidentsType: incidentTypesInitialState,
   users: userInitialState,
+  updateFilter: updateFilterInitialState
+
 };

@@ -16,7 +16,7 @@ import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIncidentsStart } from '../../../../features/incident/incidentSlice';
 import { incidentsListSelector } from 'features/incident/incidentSelector';
-import { Incidents } from './../../../types/incident';
+import { Incidents, UpdateFilter } from './../../../types/incident';
 import { incidentsSearchCriteriaSelector } from 'features/incidentsearch/incidentsearchSelector';
 import { initiateIncidentSearch } from 'features/incidentsearch/incidentsearchSlice';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -29,6 +29,7 @@ import {
 import { usersListSelector } from 'features/users/userSelector'
 import { incidentStatusListSelector } from 'features/incidentstatus/incidentStatusSelector'
 import { incidentTypesListSelector } from 'features/incidenttype/incidentTypeSelector'
+import { initiateUpdateFilter } from 'features/filter/filtersearchSlice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   pdfIcon: {
@@ -291,6 +292,13 @@ export default function EnhancedTable() {
     }
   }
 
+  const updateIncident = (event: any, row: any) => {
+    const updateFilter: UpdateFilter = {
+      open: true,
+      record: row
+    }
+    dispatch(initiateUpdateFilter(updateFilter))
+  }
   const isSelected = (no: number) => selected.indexOf(no) !== -1;
   return (
     <Box sx={{ width: '100%' }}>
@@ -343,7 +351,7 @@ export default function EnhancedTable() {
                         {statusName !== 'Completed' && <Button  onClick={(evt: any) => updateStatus(evt, row, statusName)}>{
                          statusName === 'New' || statusName === 'Assigned' ? 'Acknowledge' : 'Complete'
                          }</Button>}
-                           <EditIcon/>
+                           <EditIcon onClick={(evt: any) => updateIncident(evt, row)}/>
                           <DeleteRoundedIcon onClick={(evt: any) => deleteIncident(evt, row)}/>
                       </Box>
                       </TableCell>

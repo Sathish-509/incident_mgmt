@@ -4,6 +4,7 @@ import * as  incidentsearchEpic from 'features/incidentsearch/incidentsearchEpic
 import * as incidentStatusEpic from 'features/incidentstatus/incidentStatusEpic';
 import * as  incidentTypeEpic from 'features/incidenttype/incidentTypeEpic';
 import * as  usersEpic from 'features/users/userEpic';
+import * as  updateFilterEpic from 'features/filter/filtersearchEpic';
 
 const rootEpic = combineEpics(
 ...Object.values(incidentEpic),
@@ -11,6 +12,7 @@ const rootEpic = combineEpics(
 ...Object.values(incidentStatusEpic),
 ...Object.values(incidentTypeEpic),
 ...Object.values(usersEpic),
+...Object.values(updateFilterEpic)
 );
 
 export { rootEpic };

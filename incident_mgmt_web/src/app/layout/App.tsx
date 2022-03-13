@@ -5,6 +5,7 @@ import { theme } from 'app/theme';
 import Dashboard from './dashboard/Dashboard';
 import { useDispatch } from 'react-redux';
 import { initiateIncidentSearch } from 'features/incidentsearch/incidentsearchSlice';
+import Login from './login/Login';
 export const App = () => {
   const dispatch = useDispatch();
   dispatch(initiateIncidentSearch({}));
@@ -15,7 +16,7 @@ export const App = () => {
       <Router>
         <Switch>
           <Route exact path="/login">
-            <Dashboard />
+            <Login />
           </Route>
           <Route exact path="/dashboard">
             <Dashboard />
